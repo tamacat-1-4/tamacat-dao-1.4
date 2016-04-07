@@ -232,7 +232,8 @@ public class Dao<T extends ORMappingSupport> implements AutoCloseable {
 		return executeUpdate(getDeleteSQL(data));
 	}
 
-	protected Class<?> getCallerDaoClass() {
+	//v1.4 changed protected -> public
+	public Class<?> getCallerDaoClass() {
 		return callerDao != null ? callerDao : getClass();
 	}
 

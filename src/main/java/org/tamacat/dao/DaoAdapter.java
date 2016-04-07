@@ -24,14 +24,40 @@ import org.tamacat.sql.JdbcConfig;
 
 public class DaoAdapter<T extends ORMappingSupport> implements AutoCloseable {
 
-	protected DIContainer di = DI.configure("db.xml");
+	protected DIContainer di;
 
 	protected Dao<T> delegate;
 	
 	protected DaoAdapter() {
-		setDatabase("default");
+		this("default");
 	}
 
+	/**
+	 * @param dbname
+	 * @since 1.4-20160408
+	 */
+	protected DaoAdapter(String dbname) {
+		setDatabase(dbname);
+	}
+	
+	/**
+	 * @param di
+	 * @param dbname
+	 * @since 1.4-20160408
+	 */
+	protected DaoAdapter(DIContainer di, String dbname) {
+		setDatabase(di, dbname);
+	}
+	
+	/**
+	 * use setDatabase(String)
+	 * @param di
+	 * @since 1.4-20160408
+	 */
+	protected DaoAdapter(DIContainer di) {
+		this.di = di;
+	}
+	
 	protected DaoAdapter(Dao<T> delegate) {
 		setDao(delegate);
 	}
@@ -41,6 +67,20 @@ public class DaoAdapter<T extends ORMappingSupport> implements AutoCloseable {
 	}
 	
 	public void setDatabase(String dbname) {
+		if (di == null) {
+			di = DI.configure("db.xml");
+		}
+		setDatabase(di, dbname);
+	}
+	
+	/**
+	 * @param dbname
+	 * @since 1.4-20160408
+	 */
+	public void setDatabase(DIContainer di, String dbname) {
+		if (di == null) {
+			throw new DaoException("Please set a database configuration.");
+		}
 		JdbcConfig config = di.getBean(dbname, JdbcConfig.class);
 		if (config.getDriverClass().toLowerCase().indexOf("mysql") >= 0) {
 			delegate = new MySQLDao<>();
@@ -53,7 +93,7 @@ public class DaoAdapter<T extends ORMappingSupport> implements AutoCloseable {
 		delegate.setDatabase(dbname);
 		setDao(delegate);
 	}
-
+	
 	public void setORMapper(ORMapper<T> orm) {
 		delegate.setORMapper(orm);
 	}

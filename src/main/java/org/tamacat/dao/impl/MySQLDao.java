@@ -39,10 +39,10 @@ public class MySQLDao<T extends ORMappingSupport> extends Dao<T> {
 	public Collection<T> searchList(Query<T> query, int start, int max) {
 		Collection<Column> columns = query.getSelectColumns();
 		String sql = query.getSelectSQL();
-		if (useHitCount) {
-			sql = sql.replaceFirst("SELECT ", "SELECT SQL_CALC_FOUND_ROWS ");
-		}
 		if (start > 0 && max > 0) {
+			if (useHitCount) {
+				sql = sql.replaceFirst("SELECT ", "SELECT SQL_CALC_FOUND_ROWS ");
+			}
 			sql = sql + " limit " + (start - 1) + "," + max;
 		}
 		DaoEvent event = createDaoEvent(sql);
@@ -60,7 +60,8 @@ public class MySQLDao<T extends ORMappingSupport> extends Dao<T> {
 				if (max > 0 && add >= max)
 					break;
 			}
-			if (useHitCount) {
+			setHitCount(list.size());
+			if (useHitCount && start > 0 && max > 0) {
 				rs = stmt.executeQuery("SELECT FOUND_ROWS()");
 				if (rs.next()) {
 					long hit = rs.getLong(1);

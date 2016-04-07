@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, tamacat.org
+ * Copyright (c) 2011 tamacat.org
  * All rights reserved.
  */
 package org.tamacat.dao.impl;
@@ -24,8 +24,10 @@ public class OracleDao<T extends ORMappingSupport> extends Dao<T> {
         return new OracleSearch();
     }
     
-    @Override
-    public Collection<T> searchList(Query<T> query, int start, int max) {
+    /**
+     * TODO: bugfix
+     */
+    public Collection<T> searchListForOracle(Query<T> query, int start, int max) {
         Collection<Column>columns = query.getSelectColumns();
         String sql = query.getSelectSQL();
         if (start > 0) {
