@@ -444,6 +444,7 @@ public class QueryImpl<T extends ORMappingSupport> implements Query<ORMappingSup
 	}
 
 	protected Query<ORMappingSupport> addSearch(String condition, Search search, Sort sort) {
+		distinct(search.isUnique());
 		addWhere(condition, search.getSearchString());
 		return orderBy(sort);
 	}

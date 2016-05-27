@@ -12,9 +12,10 @@ public class Search {
 	protected StringBuilder search = new StringBuilder();
 	protected ValueConvertFilter valueConvertFilter;
 
-	private int start;
-	private int max;
-
+	protected int start;
+	protected int max;
+	protected boolean unique;
+	
 	SQLParser parser;
 
 	public Search() {
@@ -53,6 +54,24 @@ public class Search {
 		return this;
 	}
 
+	/**
+	 * @since 1.4
+	 * @param unique
+	 * @return
+	 */
+	public Search unique(boolean unique) {
+		this.unique = unique;
+		return this;
+	}
+
+	/**
+	 * @since 1.4
+	 * @return unique
+	 */
+	public boolean isUnique() {
+		return unique;
+	}
+	
 	public String getSearchString() {
 		return search.toString();
 	}
