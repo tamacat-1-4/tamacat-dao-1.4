@@ -21,8 +21,7 @@ import org.tamacat.util.StringUtils;
 /**
  * Map based ORMaping bean. (extends LinkedHashMap)
  */
-public class MapBasedORMappingBean extends LinkedHashMap<String, Object>
-		implements ORMappingSupport {
+public class MapBasedORMappingBean extends LinkedHashMap<String, Object> implements ORMappingSupport {
 
 	private static final long serialVersionUID = 1L;
 
@@ -38,6 +37,17 @@ public class MapBasedORMappingBean extends LinkedHashMap<String, Object>
 	public String val(Column column) {
 		String key = MappingUtils.getColumnName(column);
 		return MappingUtils.parse(column, get(key));
+	}
+	
+	/**
+	 * Delete column
+	 * @since 1.4
+	 * @param column
+	 */
+	public MapBasedORMappingBean del(Column column) {
+		String key = MappingUtils.getColumnName(column);
+		super.remove(key);
+		return this;
 	}
 
 	public MapBasedORMappingBean setValue(Column column, String value) {
@@ -133,7 +143,7 @@ public class MapBasedORMappingBean extends LinkedHashMap<String, Object>
 	}
 	
 	public JsonObjectBuilder toJson(Column... columns) {
-		return JSONUtils.json(this, columns);
+		return JSONUtils.toJson(this, columns);
 	}
 
 	public boolean startsWith(String target, String prefix) {
