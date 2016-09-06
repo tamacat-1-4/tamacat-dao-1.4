@@ -59,7 +59,7 @@ public class MappingUtils {
 		case OBJECT:
 			return rs.getObject(index);
 		case FUNCTION:
-			break;
+			return rs.getObject(index);
 		default:
 			break;
 		}

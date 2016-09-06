@@ -64,12 +64,13 @@ public class StackObjectPool<T> implements ObjectPool<T> {
 
     @Override
     public synchronized T getObject() {
-    	T object = null;
+        T object = null;
         if (pool.size() > 0) {
             object = pool.pop();
             try {
-              	LOG.trace("activate");
+                LOG.trace("activate");
                 factory.activate(object);
+                active.incrementAndGet();
             } catch (ObjectActivateException e) {
                 //Activate error -> destroy pooled object and retry get object.
                 LOG.warn("retry. " + e.getMessage());
@@ -77,16 +78,16 @@ public class StackObjectPool<T> implements ObjectPool<T> {
                     factory.destroy(object);
                 } finally {
                     if (active.get() > 0) {
-                    	active.decrementAndGet();
+                        active.decrementAndGet();
                     }
                 }
                 object = getObject();
             } 
         } else {
             object = create();
-        }
-        if (object != null) {
-            active.incrementAndGet();
+            if (object != null) {
+                active.incrementAndGet();
+            }
         }
     	return object;
     }
