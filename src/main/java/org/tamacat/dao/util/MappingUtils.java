@@ -115,9 +115,9 @@ public class MappingUtils {
 	/**
 	 * @sinse 1.3
 	 */
-	public static Collection<String> values(Collection<? extends MapBasedORMappingBean> beans, Column col) {
+	public static Collection<String> values(Collection<? extends MapBasedORMappingBean<?>> beans, Column col) {
 		ArrayList<String> list = new ArrayList<>();
-		for (MapBasedORMappingBean bean : beans) {
+		for (MapBasedORMappingBean<?> bean : beans) {
 			list.add(bean.val(col));
 		}
 		return list;

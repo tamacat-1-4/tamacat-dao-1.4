@@ -21,7 +21,8 @@ import org.tamacat.util.StringUtils;
 /**
  * Map based ORMaping bean. (extends LinkedHashMap)
  */
-public class MapBasedORMappingBean extends LinkedHashMap<String, Object> implements ORMappingSupport {
+public class MapBasedORMappingBean<T extends MapBasedORMappingBean<T>>
+		extends LinkedHashMap<String, Object> implements ORMappingSupport<T> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -44,17 +45,19 @@ public class MapBasedORMappingBean extends LinkedHashMap<String, Object> impleme
 	 * @since 1.4
 	 * @param column
 	 */
-	public MapBasedORMappingBean del(Column column) {
+	@SuppressWarnings("unchecked")
+	public T del(Column column) {
 		String key = MappingUtils.getColumnName(column);
 		super.remove(key);
-		return this;
+		return (T)this;
 	}
 
-	public MapBasedORMappingBean setValue(Column column, String value) {
+	public T setValue(Column column, String value) {
 		return val(column, value);
 	}
 
-	public MapBasedORMappingBean val(Column column, Object value) {
+	@SuppressWarnings("unchecked")
+	public T val(Column column, Object value) {
 		put(MappingUtils.getColumnName(column), value);
 		Validator validator = column.getValidator();
 		if (validator != null) {
@@ -68,7 +71,7 @@ public class MapBasedORMappingBean extends LinkedHashMap<String, Object> impleme
 				+" (length=" +len+", max="+ column.getMaxLength() + ")",
 				column, (String)value);
 		}
-		return this;
+		return (T)this;
 	}
 
 	@Override
@@ -112,10 +115,11 @@ public class MapBasedORMappingBean extends LinkedHashMap<String, Object> impleme
 		return super.put(name, value);
 	}
 
-	public MapBasedORMappingBean mapping(Object name, Object value) {
+	@SuppressWarnings("unchecked")
+	public T mapping(Object name, Object value) {
 		String val = value != null ? value.toString() : "";
 		put(parse(name), val);
-		return this;
+		return (T)this;
 	}
 
 	public boolean isUpdate(Object name) {

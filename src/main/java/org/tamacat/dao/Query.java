@@ -20,7 +20,7 @@ import org.tamacat.dao.orm.ORMappingSupport;
  * 
  * @param <T> extends ORMappingSupport
  */
-public interface Query<T extends ORMappingSupport> {
+public interface Query<T extends ORMappingSupport<T>> {
 
 	Query<T> select(Collection<Column> columns);
 

@@ -14,7 +14,7 @@ import org.tamacat.dao.meta.DataType;
 import org.tamacat.dao.util.MappingUtils;
 import org.tamacat.util.ClassUtils;
 
-public class ORMapper<T extends ORMappingSupport> {
+public class ORMapper<T extends ORMappingSupport<T>> {
 
 	private Class<T> type;
 

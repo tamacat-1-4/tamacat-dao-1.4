@@ -18,7 +18,7 @@ import org.tamacat.dao.meta.Column;
 import org.tamacat.dao.orm.ORMappingSupport;
 import org.tamacat.sql.SQLParser;
 
-public class MySQLDao<T extends ORMappingSupport> extends Dao<T> {
+public class MySQLDao<T extends ORMappingSupport<T>> extends Dao<T> {
 
 	public MySQLDao() {
 		parser = new SQLParser(new MySQLSearch.MySQLValueConvertFilter());

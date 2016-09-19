@@ -22,7 +22,7 @@ import org.tamacat.di.DIContainer;
 import org.tamacat.sql.DBAccessManager;
 import org.tamacat.sql.JdbcConfig;
 
-public class DaoAdapter<T extends ORMappingSupport> implements AutoCloseable {
+public class DaoAdapter<T extends ORMappingSupport<T>> implements AutoCloseable {
 
 	protected DIContainer di;
 

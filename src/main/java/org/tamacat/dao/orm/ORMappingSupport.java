@@ -8,13 +8,13 @@ import java.util.Map;
 
 import org.tamacat.dao.meta.Column;
 
-public interface ORMappingSupport extends Map<String, Object> {
+public interface ORMappingSupport<T extends ORMappingSupport<T>> extends Map<String, Object> {
 
-	ORMappingSupport mapping(Object name, Object value);
+	T mapping(Object name, Object value);
 
 	String getValue(Column column);
 
-	ORMappingSupport setValue(Column column, String value);
+	T setValue(Column column, String value);
 
 	boolean isUpdate(Object name);
 }

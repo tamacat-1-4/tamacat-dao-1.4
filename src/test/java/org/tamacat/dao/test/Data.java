@@ -5,7 +5,7 @@ import org.tamacat.dao.meta.DefaultColumn;
 import org.tamacat.dao.meta.DefaultTable;
 import org.tamacat.dao.orm.MapBasedORMappingBean;
 
-public class Data extends MapBasedORMappingBean {
+public class Data extends MapBasedORMappingBean<Data> {
 	private static final long serialVersionUID = 1L;
 
 	public static final DefaultTable TABLE = new DefaultTable("data");

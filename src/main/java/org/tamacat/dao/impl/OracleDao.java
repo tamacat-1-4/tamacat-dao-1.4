@@ -15,7 +15,7 @@ import org.tamacat.dao.Search;
 import org.tamacat.dao.meta.Column;
 import org.tamacat.dao.orm.ORMappingSupport;
 
-public class OracleDao<T extends ORMappingSupport> extends Dao<T> {
+public class OracleDao<T extends ORMappingSupport<T>> extends Dao<T> {
 
 	public OracleDao() {}
 	

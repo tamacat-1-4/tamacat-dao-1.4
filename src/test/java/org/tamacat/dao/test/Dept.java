@@ -9,7 +9,7 @@ import org.tamacat.dao.meta.DefaultTable;
 import org.tamacat.dao.meta.DataType;
 import org.tamacat.dao.orm.MapBasedORMappingBean;
 
-public class Dept extends MapBasedORMappingBean {
+public class Dept extends MapBasedORMappingBean<Dept> {
 	private static final long serialVersionUID = 1L;
 
     public static final DefaultTable TABLE = new DefaultTable("dept");

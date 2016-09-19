@@ -18,11 +18,11 @@ import org.tamacat.dao.test.User;
 
 public class MapBasedORMappingBeanTest {
 
-	MapBasedORMappingBean bean;
+	User bean;
 	
 	@Before
 	public void setUp() throws Exception {
-		bean = new MapBasedORMappingBean();
+		bean = new User();
 	}
 
 	@After

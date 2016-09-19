@@ -33,7 +33,7 @@ import org.tamacat.sql.SQLParser;
 import org.tamacat.sql.TransactionStateManager;
 import org.tamacat.util.ClassUtils;
 
-public class Dao<T extends ORMappingSupport> implements AutoCloseable {
+public class Dao<T extends ORMappingSupport<T>> implements AutoCloseable {
 
 	protected static final String DEFAULT_DBNAME = "default";
 

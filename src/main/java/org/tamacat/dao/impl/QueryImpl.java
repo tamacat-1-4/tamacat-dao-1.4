@@ -25,7 +25,7 @@ import org.tamacat.dao.util.MappingUtils;
 import org.tamacat.sql.SQLParser;
 import org.tamacat.util.UniqueCodeGenerator;
 
-public class QueryImpl<T extends ORMappingSupport> implements Query<ORMappingSupport> {
+public class QueryImpl<T extends ORMappingSupport<T>> implements Query<T> {
 
 	static final String SELECT = "SELECT";
 	static final String FROM = "FROM";
@@ -61,19 +61,19 @@ public class QueryImpl<T extends ORMappingSupport> implements Query<ORMappingSup
 	}
 
 	@Override
-	public Query<ORMappingSupport> distinct(boolean distinct) {
+	public Query<T> distinct(boolean distinct) {
 		this.distinct = distinct;
 		return this;
 	}
 
 	@Override
-	public Query<ORMappingSupport> addTable(Table table) {
+	public Query<T> addTable(Table table) {
 		tables.add(table);
 		return this;
 	}
 
 	@Override
-	public Query<ORMappingSupport> removeFromTables(Table... tables) {
+	public Query<T> removeFromTables(Table... tables) {
 		for (Table table : tables) {
 			removeFromTables.add(table);
 		}
@@ -81,13 +81,13 @@ public class QueryImpl<T extends ORMappingSupport> implements Query<ORMappingSup
 	}
 
 	@Override
-	public Query<ORMappingSupport> select(Collection<Column> columns) {
+	public Query<T> select(Collection<Column> columns) {
 		selectColumns.addAll(columns);
 		return this;
 	}
 
 	@Override
-	public Query<ORMappingSupport> select(Column... columns) {
+	public Query<T> select(Column... columns) {
 		for (Column column : columns) {
 			selectColumns.add(column);
 		}
@@ -100,26 +100,26 @@ public class QueryImpl<T extends ORMappingSupport> implements Query<ORMappingSup
 	}
 
 	@Override
-	public Query<ORMappingSupport> addUpdateColumn(Column column) {
+	public Query<T> addUpdateColumn(Column column) {
 		updateColumns.add(column);
 		return this;
 	}
 
 	@Override
-	public Query<ORMappingSupport> addUpdateColumns(Collection<Column> columns) {
+	public Query<T> addUpdateColumns(Collection<Column> columns) {
 		updateColumns.addAll(columns);
 		return this;
 	}
 
 	@Override
-	public Query<ORMappingSupport> addUpdateColumns(Column... columns) {
+	public Query<T> addUpdateColumns(Column... columns) {
 		for (Column column : columns) {
 			updateColumns.add(column);
 		}
 		return this;
 	}
 
-	public Query<ORMappingSupport> removeUpdateColumns(Column... columns) {
+	public Query<T> removeUpdateColumns(Column... columns) {
 		for (Column column : columns) {
 			updateColumns.remove(column);
 		}
@@ -181,7 +181,7 @@ public class QueryImpl<T extends ORMappingSupport> implements Query<ORMappingSup
 	}
 
 	@Override
-	public String getInsertSQL(ORMappingSupport data) {
+	public String getInsertSQL(T data) {
 		SQLParser parser = new SQLParser(valueConvertFilter);
 		StringBuilder columns = new StringBuilder();
 		StringBuilder values = new StringBuilder();
@@ -221,18 +221,18 @@ public class QueryImpl<T extends ORMappingSupport> implements Query<ORMappingSup
 	/*
 	 * @see autoPrimaryKeyUpdate(boolean useAutoPrimaryKeyUpdate)
 	 */
-	public Query<ORMappingSupport> setUseAutoPrimaryKeyUpdate(boolean useAutoPrimaryKeyUpdate) {
+	public Query<T> setUseAutoPrimaryKeyUpdate(boolean useAutoPrimaryKeyUpdate) {
 		return autoPrimaryKeyUpdate(useAutoPrimaryKeyUpdate);
 	}
 
 	@Override
-	public Query<ORMappingSupport> autoPrimaryKeyUpdate(boolean useAutoPrimaryKeyUpdate) {
+	public Query<T> autoPrimaryKeyUpdate(boolean useAutoPrimaryKeyUpdate) {
 		this.useAutoPrimaryKeyUpdate = useAutoPrimaryKeyUpdate;
 		return this;
 	}
 
 	@Override
-	public String getUpdateSQL(ORMappingSupport data) {
+	public String getUpdateSQL(T data) {
 		SQLParser parser = new SQLParser(valueConvertFilter);
 		StringBuilder values = new StringBuilder();
 		String tableName = null;
@@ -273,7 +273,7 @@ public class QueryImpl<T extends ORMappingSupport> implements Query<ORMappingSup
 	}
 
 	@Override
-	public String getDeleteSQL(ORMappingSupport data) {
+	public String getDeleteSQL(T data) {
 		SQLParser parser = new SQLParser(valueConvertFilter);
 		String tableName = null;
 		if (updateColumns != null) {
@@ -308,7 +308,7 @@ public class QueryImpl<T extends ORMappingSupport> implements Query<ORMappingSup
 	}
 
 	@Override
-	public Query<ORMappingSupport> join(Column col1, Column col2) {
+	public Query<T> join(Column col1, Column col2) {
 		tables.add(col1.getTable());
 		tables.add(col2.getTable());
 		if (where.length() == 0) {
@@ -321,7 +321,7 @@ public class QueryImpl<T extends ORMappingSupport> implements Query<ORMappingSup
 	}
 
 	@Override
-	public Query<ORMappingSupport> outerJoin(Column col1, Column col2) {
+	public Query<T> outerJoin(Column col1, Column col2) {
 		if (outerJoinTables.containsKey(col2.getTable())) {
 			outerJoinTables.put(col2.getTable(), outerJoinTables.get(col2.getTable()) + " and " + getColumnName(col1)
 					+ "=" + getColumnName(col2));
@@ -339,7 +339,7 @@ public class QueryImpl<T extends ORMappingSupport> implements Query<ORMappingSup
 	}
 
 	@Override
-	public Query<ORMappingSupport> andOuterJoin(Table tab1, Search search) {
+	public Query<T> andOuterJoin(Table tab1, Search search) {
 		if (outerJoinTables.containsKey(tab1)) {
 			outerJoinTables.put(tab1, outerJoinTables.get(tab1) + " and " + search.getSearchString());
 		}
@@ -347,57 +347,57 @@ public class QueryImpl<T extends ORMappingSupport> implements Query<ORMappingSup
 	}
 
 	@Override
-	public Query<ORMappingSupport> where(Search search, Sort sort) {
+	public Query<T> where(Search search, Sort sort) {
 		return addSearch("and", search, sort);
 	}
 
 	@Override
-	public Query<ORMappingSupport> and(Search search, Sort sort) {
+	public Query<T> and(Search search, Sort sort) {
 		return addSearch("and", search, sort);
 	}
 
 	@Override
-	public Query<ORMappingSupport> or(Search search, Sort sort) {
+	public Query<T> or(Search search, Sort sort) {
 		return addSearch("or", search, sort);
 	}
 
 	@Override
-	public Query<ORMappingSupport> where(String sql) {
+	public Query<T> where(String sql) {
 		return addWhere("and", sql);
 	}
 
 	@Override
-	public Query<ORMappingSupport> and(String sql) {
+	public Query<T> and(String sql) {
 		return addWhere("and", sql);
 	}
 
 	@Override
-	public Query<ORMappingSupport> or(String sql) {
+	public Query<T> or(String sql) {
 		return addWhere("or", sql);
 	}
 
 	@Override
-	public Query<ORMappingSupport> andIn(Column column, Query<ORMappingSupport> query) {
+	public Query<T> andIn(Column column, Query<T> query) {
 		return addWhere("and", getColumnName(column) + " IN (" + query.getSelectSQL() + ")");
 	}
 
 	@Override
-	public Query<ORMappingSupport> andNotIn(Column column, Query<ORMappingSupport> query) {
+	public Query<T> andNotIn(Column column, Query<T> query) {
 		return addWhere("and", getColumnName(column) + " NOT IN (" + query.getSelectSQL() + ")");
 	}
 
 	@Override
-	public Query<ORMappingSupport> andExists(Query<ORMappingSupport> query) {
+	public Query<T> andExists(Query<T> query) {
 		return addWhere("and", "EXISTS (" + query.getSelectSQL() + ")");
 	}
 
 	@Override
-	public Query<ORMappingSupport> andNotExists(Query<ORMappingSupport> query) {
+	public Query<T> andNotExists(Query<T> query) {
 		return addWhere("and", "NOT EXISTS (" + query.getSelectSQL() + ")");
 	}
 
 	@Override
-	public Query<ORMappingSupport> groupBy(Column... cols) {
+	public Query<T> groupBy(Column... cols) {
 		if (cols != null && cols.length > 0) {
 			for (Column col : cols) {
 				if (groupBy.length() == 0) {
@@ -412,7 +412,7 @@ public class QueryImpl<T extends ORMappingSupport> implements Query<ORMappingSup
 	}
 
 	@Override
-	public Query<ORMappingSupport> orderBy(Sort sort) {
+	public Query<T> orderBy(Sort sort) {
 		if (sort != null && sort.getSortString().length() > 0) {
 			if (orderBy.length() == 0) {
 				orderBy.append(" " + ORDER_BY + " ");
@@ -430,7 +430,7 @@ public class QueryImpl<T extends ORMappingSupport> implements Query<ORMappingSup
 	 * @param sql
 	 * @return
 	 */
-	protected Query<ORMappingSupport> addWhere(String condition, String sql) {
+	protected Query<T> addWhere(String condition, String sql) {
 		if (sql != null && sql.trim().length() > 0) {
 			if (where.length() == 0) {
 				where.append(" " + WHERE + " ");
@@ -443,7 +443,7 @@ public class QueryImpl<T extends ORMappingSupport> implements Query<ORMappingSup
 		return this;
 	}
 
-	protected Query<ORMappingSupport> addSearch(String condition, Search search, Sort sort) {
+	protected Query<T> addSearch(String condition, Search search, Sort sort) {
 		distinct(search.isUnique());
 		addWhere(condition, search.getSearchString());
 		return orderBy(sort);

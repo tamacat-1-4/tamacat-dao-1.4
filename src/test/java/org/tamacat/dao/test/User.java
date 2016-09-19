@@ -9,7 +9,7 @@ import org.tamacat.dao.meta.DefaultTable;
 import org.tamacat.dao.meta.DataType;
 import org.tamacat.dao.orm.MapBasedORMappingBean;
 
-public class User extends MapBasedORMappingBean {
+public class User extends MapBasedORMappingBean<User> {
 
 	private static final long serialVersionUID = 1L;
 

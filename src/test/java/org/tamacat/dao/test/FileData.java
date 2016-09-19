@@ -5,7 +5,7 @@ import org.tamacat.dao.meta.DefaultTable;
 import org.tamacat.dao.meta.DataType;
 import org.tamacat.dao.orm.MapBasedORMappingBean;
 
-public class FileData extends MapBasedORMappingBean {
+public class FileData extends MapBasedORMappingBean<FileData> {
 
 	private static final long serialVersionUID = 1L;
 
