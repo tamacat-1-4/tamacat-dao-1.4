@@ -1,14 +1,18 @@
 package org.tamacat.dao.util;
 
 import java.util.Collection;
+import java.util.Map;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
+import javax.json.stream.JsonParser;
+import javax.json.stream.JsonParser.Event;
 
 import org.tamacat.dao.meta.Column;
 import org.tamacat.dao.meta.DataType;
 import org.tamacat.dao.orm.MapBasedORMappingBean;
+import org.tamacat.util.CollectionUtils;
 import org.tamacat.util.DateUtils;
 import org.tamacat.util.StringUtils;
 
@@ -65,5 +69,52 @@ public class JSONUtils {
 			builder.add(json(bean, columns));
 		}
 		return builder;
+	}
+	
+	public static MapBasedORMappingBean<?> parse(MapBasedORMappingBean<?> bean, JsonParser parser, Column... columns) {
+		Map<String, Column> colmaps = CollectionUtils.newLinkedHashMap();
+		for (Column col : columns) {
+			colmaps.put(col.getColumnName(), col);
+		}
+		Column col = null;
+		while (parser.hasNext()) {
+			Event event = parser.next();
+			switch (event) {
+				case KEY_NAME:
+					String key = parser.getString();
+					if (StringUtils.isNotEmpty(key)) {
+						col = colmaps.get(key); 
+					}
+					break;
+				case VALUE_STRING:
+					if (col != null) {
+						bean.val(col, parser.getString());
+					}
+					break;
+				case VALUE_TRUE:
+					if (col != null) {
+						bean.val(col, true);
+					}
+					break;
+				case VALUE_FALSE:
+					if (col != null) {
+						bean.val(col, false);
+					}
+					break;
+				case VALUE_NUMBER:
+					if (col != null) {
+						bean.val(col, parser.getLong());
+					}
+					break;
+				case VALUE_NULL:
+					if (col != null) {
+						bean.val(col, "");
+					}
+					break;
+				default:
+					break;
+			}
+		}
+		return bean;
 	}
 }

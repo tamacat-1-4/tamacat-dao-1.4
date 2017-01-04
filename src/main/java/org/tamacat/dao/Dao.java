@@ -326,7 +326,7 @@ public class Dao<T extends ORMappingSupport<T>> implements AutoCloseable {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public void close() {
 		release();
 	}
 }

@@ -4,11 +4,13 @@
  */
 package org.tamacat.dao.orm;
 
+import java.io.Reader;
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 
 import org.tamacat.dao.exception.InvalidValueLengthException;
@@ -35,6 +37,7 @@ public class MapBasedORMappingBean<T extends MapBasedORMappingBean<T>>
 		return val(column);
 	}
 
+	@Override
 	public String val(Column column) {
 		String key = MappingUtils.getColumnName(column);
 		return MappingUtils.parse(column, get(key));
@@ -46,17 +49,20 @@ public class MapBasedORMappingBean<T extends MapBasedORMappingBean<T>>
 	 * @param column
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public T del(Column column) {
 		String key = MappingUtils.getColumnName(column);
 		super.remove(key);
 		return (T)this;
 	}
 
+	@Override
 	public T setValue(Column column, String value) {
 		return val(column, value);
 	}
 
 	@SuppressWarnings("unchecked")
+	@Override
 	public T val(Column column, Object value) {
 		put(MappingUtils.getColumnName(column), value);
 		Validator validator = column.getValidator();
@@ -150,6 +156,10 @@ public class MapBasedORMappingBean<T extends MapBasedORMappingBean<T>>
 		return JSONUtils.toJson(this, columns);
 	}
 
+	public void parseJson(Reader reader, Column... columns) {
+		JSONUtils.parse(this, Json.createParser(reader), columns);
+	}
+	
 	public boolean startsWith(String target, String prefix) {
 		return target != null && target.startsWith(prefix);
 	}
