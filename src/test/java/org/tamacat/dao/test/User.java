@@ -4,8 +4,10 @@
  */
 package org.tamacat.dao.test;
 
-import org.tamacat.dao.meta.DefaultColumn;
-import org.tamacat.dao.meta.DefaultTable;
+import org.tamacat.dao.meta.Table;
+import org.tamacat.dao.meta.Tables;
+import org.tamacat.dao.meta.Column;
+import org.tamacat.dao.meta.Columns;
 import org.tamacat.dao.meta.DataType;
 import org.tamacat.dao.orm.MapBasedORMappingBean;
 
@@ -13,17 +15,12 @@ public class User extends MapBasedORMappingBean<User> {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final DefaultTable TABLE = new DefaultTable("users");
-	public static final DefaultColumn USER_ID = new DefaultColumn("user_id");
-	public static final DefaultColumn PASSWORD = new DefaultColumn("password");
-	public static final DefaultColumn DEPT_ID = new DefaultColumn("dept_id");
-	public static final DefaultColumn UPDATE_DATE = new DefaultColumn("update_date");
-
-	static {
-		USER_ID.type(DataType.STRING).setPrimaryKey(true);
-		PASSWORD.type(DataType.STRING);
-		DEPT_ID.type(DataType.STRING);
-		UPDATE_DATE.type(DataType.TIME);
-		TABLE.registerColumn(USER_ID, PASSWORD, DEPT_ID, UPDATE_DATE);
-	}
+	public static final Column USER_ID = Columns.create("user_id").primaryKey(true);
+	public static final Column PASSWORD = Columns.create("password");
+	public static final Column DEPT_ID = Columns.create("dept_id");
+	public static final Column UPDATE_DATE = Columns.create("update_date").type(DataType.TIME);
+	public static final Column AGE = Columns.create("age").type(DataType.NUMERIC);
+	
+	public static final Table TABLE = Tables.create("users")
+			.registerColumn(USER_ID, PASSWORD, DEPT_ID, UPDATE_DATE, AGE);
 }

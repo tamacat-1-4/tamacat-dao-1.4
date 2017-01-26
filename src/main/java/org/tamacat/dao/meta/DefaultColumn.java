@@ -29,6 +29,8 @@ public class DefaultColumn implements Column, Serializable {
 	protected Validator validator;
 	protected Table table;
 
+	protected String format; //add v1.4
+	
 	public DefaultColumn() {
 	}
 
@@ -215,5 +217,16 @@ public class DefaultColumn implements Column, Serializable {
 	public Column set(Validator validator) {
 		this.validator = validator;
 		return this;
+	}
+	
+	@Override
+	public Column format(String format) {
+		this.format = format;
+		return this;
+	}
+
+	@Override
+	public String getFormat() {
+		return format;
 	}
 }

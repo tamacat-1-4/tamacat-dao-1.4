@@ -52,7 +52,16 @@ public class JSONUtils {
 				} else if (col.getType()==DataType.FLOAT) {
 					builder.add(col.getColumnName(), StringUtils.parse(value, 0d));
 				} else if (col.getType()==DataType.TIME) {
-					builder.add(col.getColumnName(), DateUtils.parse(value, "yyyy-MM-dd H:mm:ss.S").getTime());
+					String format = col.getFormat();
+					if (StringUtils.isNotEmpty(format)) {
+						builder.add(col.getColumnName(), DateUtils.parse(value, format).getTime());
+					} else {
+						if (value.indexOf('.')>0) {
+							builder.add(col.getColumnName(), DateUtils.parse(value, "yyyy-MM-dd HH:mm:ss.SSS").getTime());
+						} else {
+							builder.add(col.getColumnName(), DateUtils.parse(value, "yyyy-MM-dd HH:mm:ss").getTime());
+						}
+					}
 				} else if (col.getType()==DataType.DATE) {
 					builder.add(col.getColumnName(), DateUtils.parse(value, "yyyy-MM-dd").getTime());
 				} else {
@@ -83,35 +92,41 @@ public class JSONUtils {
 				case KEY_NAME:
 					String key = parser.getString();
 					if (StringUtils.isNotEmpty(key)) {
-						col = colmaps.get(key); 
+						col = colmaps.get(key);
 					}
 					break;
 				case VALUE_STRING:
 					if (col != null) {
 						bean.val(col, parser.getString());
+						col = null;
 					}
 					break;
 				case VALUE_TRUE:
 					if (col != null) {
 						bean.val(col, true);
+						col = null;
 					}
 					break;
 				case VALUE_FALSE:
 					if (col != null) {
 						bean.val(col, false);
+						col = null;
 					}
 					break;
 				case VALUE_NUMBER:
 					if (col != null) {
 						bean.val(col, parser.getLong());
+						col = null;
 					}
 					break;
 				case VALUE_NULL:
 					if (col != null) {
 						bean.val(col, "");
+						col = null;
 					}
 					break;
 				default:
+					col = null;
 					break;
 			}
 		}

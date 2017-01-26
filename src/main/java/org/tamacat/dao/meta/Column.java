@@ -59,6 +59,16 @@ public interface Column {
 
 	Column NULL = new NullColumn();
 
+	/**
+	 * @since 1.4
+	 */
+	Column format(String format);
+	
+	/**
+	 * @since 1.4
+	 */
+	String getFormat();
+	
 	class NullColumn implements Column {
 		Validator validator;
 		DataType type;
@@ -68,6 +78,7 @@ public interface Column {
 		boolean function;
 		boolean autoTimestamp;
 		boolean autoGenerateId;
+		String format;
 		
 		@Override
 		public String getName() {
@@ -179,6 +190,17 @@ public interface Column {
 		public Column maxLength(int maxLength) {
 			this.maxLength = maxLength;
 			return this;
+		}
+
+		@Override
+		public Column format(String format) {
+			this.format = format;
+			return this;
+		}
+
+		@Override
+		public String getFormat() {
+			return format;
 		}
 	}
 }
