@@ -37,7 +37,7 @@ public class QueryImplTest {
 	@Test
 	public void testGetSelectColumns_addSelectColumns() {
 		query.select(User.TABLE.getColumns());
-		assertEquals(4, query.getSelectColumns().size());
+		assertEquals(5, query.getSelectColumns().size());
 	}
 	
 	@Test
@@ -49,13 +49,13 @@ public class QueryImplTest {
 	@Test
 	public void testGetUpdateColumns_addUpdateColumns() {
 		query.addUpdateColumns(User.TABLE.getColumns());
-		assertEquals(4, query.getUpdateColumns().size());
+		assertEquals(5, query.getUpdateColumns().size());
 	}
 	
 	@Test
 	public void testGetUpdateColumns_removeUpdateColumns() {
 		query.addUpdateColumns(User.TABLE.getColumns()).removeUpdateColumns(User.PASSWORD);
-		assertEquals(3, query.getUpdateColumns().size());
+		assertEquals(4, query.getUpdateColumns().size());
 	}
 	
 	@Test
@@ -71,7 +71,7 @@ public class QueryImplTest {
 	public void testGetSelectSQL_AddSelectColumns() {
 		query.select(User.TABLE.getColumns());
 		assertEquals(
-			"SELECT users.user_id,users.password,users.dept_id,users.update_date FROM users",
+			"SELECT users.user_id,users.password,users.dept_id,users.update_date,users.age FROM users",
 			query.getSelectSQL()
 		);
 	}
@@ -85,8 +85,8 @@ public class QueryImplTest {
 		query.addUpdateColumns(User.TABLE.getColumns());
 		
 		assertEquals(
-			"INSERT INTO users (user_id,password,dept_id,update_date)"
-			+ " VALUES ('admin','test','123',null)", query.getInsertSQL(user));
+			"INSERT INTO users (user_id,password,dept_id,update_date,age)"
+			+ " VALUES ('admin','test','123',null,null)", query.getInsertSQL(user));
 	}
 
 	@Test

@@ -59,15 +59,15 @@ public class MySQLDaoTest {
 		user.val(User.USER_ID, "guest");
 		user.val(User.DEPT_ID, "Development");
 		user.val(User.PASSWORD, null);
-		assertEquals("INSERT INTO users (user_id,password,dept_id,update_date) VALUES ('guest',null,'Development',null)",
+		assertEquals("INSERT INTO users (user_id,password,dept_id,update_date,age) VALUES ('guest',null,'Development',null,null)",
 			query.getInsertSQL(user));
 		
 		user.val(User.PASSWORD, "'");
-		assertEquals("INSERT INTO users (user_id,password,dept_id,update_date) VALUES ('guest','''','Development',null)",
+		assertEquals("INSERT INTO users (user_id,password,dept_id,update_date,age) VALUES ('guest','''','Development',null,null)",
 			query.getInsertSQL(user));
 		
 		user.val(User.PASSWORD, "\''\"");
-		assertEquals("INSERT INTO users (user_id,password,dept_id,update_date) VALUES ('guest','''''\"','Development',null)",
+		assertEquals("INSERT INTO users (user_id,password,dept_id,update_date,age) VALUES ('guest','''''\"','Development',null,null)",
 			query.getInsertSQL(user));
 	}
 	

@@ -6,6 +6,7 @@ package org.tamacat.dao.orm;
 
 import java.io.Reader;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -40,7 +41,15 @@ public class MapBasedORMappingBean<T extends MapBasedORMappingBean<T>>
 	@Override
 	public String val(Column column) {
 		String key = MappingUtils.getColumnName(column);
-		return MappingUtils.parse(column, get(key));
+		return MappingUtils.parseString(column, get(key));
+	}
+	
+	/**
+	 * Get value of Date.
+	 * @since 1.4
+	 */
+	public Date date(Column column) {
+		return MappingUtils.parseDate(val(column));
 	}
 	
 	/**

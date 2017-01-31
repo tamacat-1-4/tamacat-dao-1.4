@@ -39,7 +39,7 @@ public class UserDaoTest {
 		assertEquals(1, result);
 		
 		assertEquals(
-			"INSERT INTO users (user_id,password,dept_id,update_date) VALUES ('admin','password',null,null)",
+			"INSERT INTO users (user_id,password,dept_id,update_date,age) VALUES ('admin','password',null,null,null)",
 			dao.getExecutedQuery().get(0)
 		);
 	}
@@ -52,7 +52,7 @@ public class UserDaoTest {
 		assertNotNull(user);
 		
 		assertEquals(
-			"SELECT users.user_id,users.password,users.dept_id,users.update_date"
+			"SELECT users.user_id,users.password,users.dept_id,users.update_date,users.age"
 			+" FROM users WHERE users.user_id='admin'",
 			dao.getExecutedQuery().get(0)
 		);
@@ -65,7 +65,7 @@ public class UserDaoTest {
 		Sort sort = dao.createSort();
 		Collection<User> list = dao.searchList(search, sort);
 		assertEquals(
-			"SELECT users.user_id,users.password,users.dept_id,users.update_date"
+			"SELECT users.user_id,users.password,users.dept_id,users.update_date,users.age"
 			+" FROM users WHERE users.user_id like '%admin%'",
 			dao.getExecutedQuery().get(0)
 		);

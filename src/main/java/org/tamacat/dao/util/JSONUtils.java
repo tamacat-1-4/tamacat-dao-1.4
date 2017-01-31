@@ -1,6 +1,7 @@
 package org.tamacat.dao.util;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 
 import javax.json.Json;
@@ -54,7 +55,10 @@ public class JSONUtils {
 				} else if (col.getType()==DataType.TIME) {
 					String format = col.getFormat();
 					if (StringUtils.isNotEmpty(format)) {
-						builder.add(col.getColumnName(), DateUtils.parse(value, format).getTime());
+						Date d = DateUtils.parse(value, format);
+						if (d != null) {
+							builder.add(col.getColumnName(), DateUtils.getTime(d, format));
+						}
 					} else {
 						if (value.indexOf('.')>0) {
 							builder.add(col.getColumnName(), DateUtils.parse(value, "yyyy-MM-dd HH:mm:ss.SSS").getTime());

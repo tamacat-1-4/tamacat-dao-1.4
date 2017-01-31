@@ -139,4 +139,14 @@ public class MapBasedORMappingBeanTest {
  		data.val(Data.NUM2, new BigDecimal("1234567890.000000123456789"));
  		assertEquals("1234567890.000000123456789", data.val(Data.NUM2));
  	}
+ 	
+ 	@Test
+ 	public void testDate() {
+ 		long time = 1500000000000L;
+ 		Data data = new Data();
+ 		data.val(Data.UPDATE_DATE, new Date(time));
+ 		
+ 		Date date = data.date(Data.UPDATE_DATE);
+ 		assertEquals(time, date.getTime());
+ 	}
 }

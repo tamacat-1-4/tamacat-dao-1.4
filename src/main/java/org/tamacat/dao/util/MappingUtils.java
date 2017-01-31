@@ -21,6 +21,7 @@ public class MappingUtils {
 
 	static String DATE_FORMAT = "yyyy-MM-dd";
 	static String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	static String TIME_MS_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
 	/**
 	 * mapping ResultSet to Object from DataType
@@ -75,10 +76,16 @@ public class MappingUtils {
 	public static Date parseDate(Object value) {
 		if (value instanceof Date) {
 			return (Date) value;
+		} else if (value instanceof Long) {
+			return new Date((Long) value);
 		} else if (value instanceof String) {
 			String val = (String) value;
-			if (val.indexOf(":") >= 0) {
-				return DateUtils.parse((String) value, TIME_FORMAT);
+			if (val.indexOf(":") > 0) {
+				if (val.indexOf(".") > 0) {
+					return DateUtils.parse((String) value, TIME_MS_FORMAT);
+				} else {
+					return DateUtils.parse((String) value, TIME_FORMAT);
+				}
 			} else {
 				return DateUtils.parse((String) value, DATE_FORMAT);
 			}
@@ -86,14 +93,28 @@ public class MappingUtils {
 		return null;
 	}
 
+	@Deprecated
 	public static String parse(Column column, Object value) {
+		return parseString(column, value);
+	}
+	
+	//rename parse -> parseString
+	public static String parseString(Column column, Object value) {
 		DataType type = column.getType();
-		if (value == null)
-			return null;
+		String format = column.getFormat();
+		if (value == null) return null;
 		if (type == DataType.DATE && value instanceof Date) {
-			return DateUtils.getTime((Date) value, DATE_FORMAT);
+			if (StringUtils.isNotEmpty(format)) {
+				return DateUtils.getTime((Date) value, format);
+			} else {
+				return DateUtils.getTime((Date) value, DATE_FORMAT);
+			}
 		} else if (type == DataType.TIME && value instanceof Date) {
-			return DateUtils.getTime((Date) value, TIME_FORMAT);
+			if (StringUtils.isNotEmpty(format)) {
+				return DateUtils.getTime((Date) value, format);
+			} else {
+				return DateUtils.getTime((Date) value, TIME_FORMAT);
+			}
 		} else if (value instanceof String) {
 			return (String) value;
 		} else {

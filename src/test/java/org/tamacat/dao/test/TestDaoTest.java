@@ -15,7 +15,7 @@ public class TestDaoTest {
 		Query<User> query = dao.createQuery().select(User.TABLE.columns());
 		dao.search(query);
 		assertEquals(
-			"SELECT users.user_id,users.password,users.dept_id,users.update_date FROM users",
+			"SELECT users.user_id,users.password,users.dept_id,users.update_date,users.age FROM users",
 			dao.getExecutedQuery().get(0)
 		);
 		dao.release();
