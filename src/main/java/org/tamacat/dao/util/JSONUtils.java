@@ -13,12 +13,17 @@ import javax.json.stream.JsonParser.Event;
 import org.tamacat.dao.meta.Column;
 import org.tamacat.dao.meta.DataType;
 import org.tamacat.dao.orm.MapBasedORMappingBean;
+import org.tamacat.log.Log;
+import org.tamacat.log.LogFactory;
+import org.tamacat.util.ClassUtils;
 import org.tamacat.util.CollectionUtils;
 import org.tamacat.util.DateUtils;
 import org.tamacat.util.StringUtils;
 
 public class JSONUtils {
 
+	static final Log LOG = LogFactory.getLog(JSONUtils.class);
+	
 	public static String toString(MapBasedORMappingBean<?> bean, Column... columns) {
 		return json(bean, columns).build().toString();
 	}
@@ -84,7 +89,7 @@ public class JSONUtils {
 		return builder;
 	}
 	
-	public static MapBasedORMappingBean<?> parse(MapBasedORMappingBean<?> bean, JsonParser parser, Column... columns) {
+	public static <T extends MapBasedORMappingBean<?>> T parse(T bean, JsonParser parser, Column... columns) {
 		Map<String, Column> colmaps = CollectionUtils.newLinkedHashMap();
 		for (Column col : columns) {
 			colmaps.put(col.getColumnName(), col);
@@ -129,11 +134,95 @@ public class JSONUtils {
 						col = null;
 					}
 					break;
+				case START_ARRAY:
+				case END_ARRAY:
+				case START_OBJECT:
+				case END_OBJECT:
+					break;
 				default:
+					LOG.warn("JSON parser unknown event: "+event);
 					col = null;
 					break;
 			}
 		}
 		return bean;
+	}
+	
+	public static <T extends MapBasedORMappingBean<?>> Collection<T> parseArray(JsonParser parser, Class<T> type, Column... columns) {
+		Collection<T> list = CollectionUtils.newArrayList();
+		Map<String, Column> colmaps = CollectionUtils.newLinkedHashMap();
+		for (Column col : columns) {
+			colmaps.put(col.getColumnName(), col);
+		}
+		T data = null;
+		Column col = null;
+		while (parser.hasNext()) {
+			Event event = parser.next();
+			switch (event) {
+				case KEY_NAME:
+					String key = parser.getString();
+					if (StringUtils.isNotEmpty(key)) {
+						col = colmaps.get(key);
+					}
+					break;
+				case VALUE_STRING:
+					if (col != null) {
+						String value = parser.getString();
+						data.val(col, value);
+						LOG.trace("    \""+col.getColumnName()+"\":\""+value+"\"");
+						col = null;
+					}
+					break;
+				case VALUE_TRUE:
+					if (col != null) {
+						data.val(col, true);
+						LOG.trace("    \""+col.getColumnName()+"\":true");
+						col = null;
+					}
+					break;
+				case VALUE_FALSE:
+					if (col != null) {
+						data.val(col, false);
+						LOG.trace("    \""+col.getColumnName()+"\":false");
+						col = null;
+					}
+					break;
+				case VALUE_NUMBER:
+					if (col != null) {
+						long value = parser.getLong();
+						data.val(col, value);
+						LOG.trace("    \""+col.getColumnName()+"\":\""+value+"\"");
+						col = null;
+					}
+					break;
+				case VALUE_NULL:
+					if (col != null) {
+						data.val(col, "");
+						LOG.trace("    \""+col.getColumnName()+"\":\"\"");
+						col = null;
+					}
+					break;
+				case START_ARRAY:
+					LOG.trace("[");
+					break;
+				case END_ARRAY:
+					LOG.trace("]");
+					break;
+				case START_OBJECT:
+					data = ClassUtils.newInstance(type);
+					LOG.trace("  {");
+					break;
+				case END_OBJECT:
+					list.add(data);
+					data = null;
+					LOG.trace("  }");
+					break;
+				default:
+					LOG.warn("JSON parser unknown event: "+event);
+					col = null;
+					break;
+			}
+		}
+		return list;
 	}
 }
