@@ -7,6 +7,10 @@ package org.tamacat.dao;
 import org.tamacat.dao.meta.Column;
 import org.tamacat.dao.util.MappingUtils;
 
+/**
+ * Sort condition for Database access.
+ * (SQL: order by)
+ */
 public class Sort {
 
     public enum Order {

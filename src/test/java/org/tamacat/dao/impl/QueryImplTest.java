@@ -10,6 +10,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.tamacat.dao.Condition;
+import org.tamacat.dao.Search;
+import org.tamacat.dao.Sort;
 import org.tamacat.dao.exception.InvalidParameterException;
 import org.tamacat.dao.test.Dept;
 import org.tamacat.dao.test.User;
@@ -72,6 +74,35 @@ public class QueryImplTest {
 		query.select(User.TABLE.getColumns());
 		assertEquals(
 			"SELECT users.user_id,users.password,users.dept_id,users.update_date,users.age FROM users",
+			query.getSelectSQL()
+		);
+	}
+	
+	@Test
+	public void testGetSelectSQL_QueryDistinctTrue() {
+		query.select(User.TABLE.getColumns()).distinct(true);
+		assertEquals(
+			"SELECT DISTINCT users.user_id,users.password,users.dept_id,users.update_date,users.age FROM users",
+			query.getSelectSQL()
+		);
+	}
+	
+	@Test
+	public void testGetSelectSQL_DistinctFalse_SearchUniqueTrue() {
+		Search search = new MySQLSearch().unique(true); //override
+		query.select(User.TABLE.getColumns()).distinct(false).and(search, (Sort)null);
+		assertEquals(
+			"SELECT DISTINCT users.user_id,users.password,users.dept_id,users.update_date,users.age FROM users",
+			query.getSelectSQL()
+		);
+	}
+	
+	@Test
+	public void testGetSelectSQL_DistinctTrue_SearchUniqueFalse() {
+		Search search = new MySQLSearch().unique(false);
+		query.select(User.TABLE.getColumns()).distinct(true).and(search, (Sort)null);
+		assertEquals(
+			"SELECT DISTINCT users.user_id,users.password,users.dept_id,users.update_date,users.age FROM users",
 			query.getSelectSQL()
 		);
 	}

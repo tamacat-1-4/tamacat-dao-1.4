@@ -7,6 +7,10 @@ package org.tamacat.dao;
 import org.tamacat.dao.meta.Column;
 import org.tamacat.sql.SQLParser;
 
+/**
+ * Search condition for Database access.
+ * (SQL: where, limit)
+ */
 public class Search {
 
 	protected StringBuilder search = new StringBuilder();
@@ -55,9 +59,10 @@ public class Search {
 	}
 
 	/**
+	 * Set the using SELECT DISTINCT.
+	 * Already set a Query#distinct(true), can not override Search#distinct(false).
 	 * @since 1.4
 	 * @param unique
-	 * @return
 	 */
 	public Search unique(boolean unique) {
 		this.unique = unique;
@@ -65,6 +70,7 @@ public class Search {
 	}
 
 	/**
+	 * Using SELECT DISTINCT
 	 * @since 1.4
 	 * @return unique
 	 */
