@@ -8,8 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.tamacat.dao.Condition;
 import org.tamacat.dao.Search.ValueConvertFilter;
-import org.tamacat.dao.meta.DefaultColumn;
 import org.tamacat.dao.meta.DefaultTable;
+import org.tamacat.dao.meta.Column;
+import org.tamacat.dao.meta.Columns;
 import org.tamacat.dao.meta.DataType;
 import org.tamacat.sql.SQLParser;
 
@@ -18,21 +19,21 @@ import junit.framework.TestCase;
 public class SQLParserTest extends TestCase {
 
 	DefaultTable table1;
-	DefaultColumn column1;
-	DefaultColumn column2;
-	DefaultColumn column3;
-	DefaultColumn column4;
+	Column column1;
+	Column column2;
+	Column column3;
+	Column column4;
 	SQLParser parser;
 	
 	@Before
 	protected void setUp() throws Exception {
-		column1 = new DefaultColumn().setColumnName("name").setType(DataType.STRING);
+		column1 = Columns.create("name").type(DataType.STRING);
 		
-		column2 = new DefaultColumn().setColumnName("id").setType(DataType.NUMERIC);
+		column2 = Columns.create("id").type(DataType.NUMERIC);
 		
-		column3 = new DefaultColumn().setColumnName("date").setType(DataType.DATE);
+		column3 = Columns.create("date").type(DataType.DATE);
 		
-		column4 = new DefaultColumn().setColumnName("time").setType(DataType.TIME);
+		column4 = Columns.create("time").type(DataType.TIME);
 		
 		table1 = new DefaultTable("test1");
 		table1.registerColumn(column1, column2, column3, column4);

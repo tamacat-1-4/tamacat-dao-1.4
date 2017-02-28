@@ -30,6 +30,8 @@ public class DefaultColumn implements Column, Serializable {
 	protected Table table;
 
 	protected String format; //add v1.4
+	protected String description; //add v1.4
+	protected String option; //add v1.4
 	
 	public DefaultColumn() {
 	}
@@ -62,25 +64,38 @@ public class DefaultColumn implements Column, Serializable {
 		}
 	}
 
+	@Override
 	public String getColumnName() {
 		return columnName;
 	}
 
-	public DefaultColumn setColumnName(String columnName) {
+	@Override
+	public Column columnName(String columnName) {
+		return setColumnName(columnName);
+	}
+	
+	public Column setColumnName(String columnName) {
 		this.columnName = columnName;
 		return this;
 	}
 
-	public DefaultColumn column(String columnName) {
-		this.columnName = columnName;
-		return this;
-	}
+	//@Deprecated
+	//public Column column(String columnName) {
+	//	this.columnName = columnName;
+	//	return this;
+	//}
 
+	@Override
 	public String getDefaultValue() {
 		return defaultValue;
 	}
-
-	public DefaultColumn setDefaultValue(String defaultValue) {
+	
+	@Override
+	public Column defaultValue(String defaultValue) {
+		return setDefaultValue(defaultValue);
+	}
+	
+	public Column setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
 		return this;
 	}
@@ -91,12 +106,12 @@ public class DefaultColumn implements Column, Serializable {
 	}
 
 	@Override
-	public DefaultColumn autoGenerateId(boolean isAutoGenerateId) {
+	public Column autoGenerateId(boolean isAutoGenerateId) {
 		this.isAutoGenerateId = isAutoGenerateId;
 		return this;
 	}
 	
-	public DefaultColumn setAutoGenerateId(boolean isAutoGenerateId) {
+	public Column setAutoGenerateId(boolean isAutoGenerateId) {
 		return autoGenerateId(isAutoGenerateId);
 	}
 	
@@ -106,12 +121,12 @@ public class DefaultColumn implements Column, Serializable {
 	}
 
 	@Override
-	public DefaultColumn autoTimestamp(boolean isAutoTimestamp) {
+	public Column autoTimestamp(boolean isAutoTimestamp) {
 		this.isAutoTimestamp = isAutoTimestamp;
 		return this;
 	}
 	
-	public DefaultColumn setAutoTimestamp(boolean isAutoTimestamp) {
+	public Column setAutoTimestamp(boolean isAutoTimestamp) {
 		return autoTimestamp(isAutoTimestamp);
 	}
 
@@ -121,12 +136,12 @@ public class DefaultColumn implements Column, Serializable {
 	}
 
 	@Override
-	public DefaultColumn notNull(boolean isNotNull) {
+	public Column notNull(boolean isNotNull) {
 		this.isNotNull = isNotNull;
 		return this;
 	}
 	
-	public DefaultColumn setNotNull(boolean isNotNull) {
+	public Column setNotNull(boolean isNotNull) {
 		return notNull(isNotNull);
 	}
 
@@ -136,12 +151,12 @@ public class DefaultColumn implements Column, Serializable {
 	}
 	
 	@Override
-	public DefaultColumn primaryKey(boolean isPrimaryKey) {
+	public Column primaryKey(boolean isPrimaryKey) {
 		this.isPrimaryKey = isPrimaryKey;
 		return this;
 	}
 	
-	public DefaultColumn setPrimaryKey(boolean isPrimaryKey) {
+	public Column setPrimaryKey(boolean isPrimaryKey) {
 		return primaryKey(isPrimaryKey);
 	}
 	
@@ -150,7 +165,12 @@ public class DefaultColumn implements Column, Serializable {
 		return name;
 	}
 
-	public DefaultColumn setName(String name) {
+	@Override
+	public Column name(String name) {
+		return setName(name);
+	}
+	
+	public Column setName(String name) {
 		this.name = name;
 		return this;
 	}
@@ -165,7 +185,12 @@ public class DefaultColumn implements Column, Serializable {
 		return functionName;
 	}
 
-	public DefaultColumn setFunctionName(String functionName) {
+	@Override
+	public Column functionName(String functionName) {
+		return setFunctionName(functionName);
+	}
+	
+	public Column setFunctionName(String functionName) {
 		this.functionName = functionName;
 		this.isFunction = true;
 		return this;
@@ -228,5 +253,26 @@ public class DefaultColumn implements Column, Serializable {
 	@Override
 	public String getFormat() {
 		return format;
+	}
+	
+	@Override
+	public String getOption() {
+		return option;
+	}
+	
+	public Column option(String option) {
+		this.option = option;
+		return this;
+	}
+
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
+	public Column description(String description) {
+		this.description = description;
+		return this;
 	}
 }

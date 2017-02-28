@@ -25,9 +25,11 @@ public class SearchTest extends TestCase {
 	@Before
 	protected void setUp() throws Exception {
 		table1 = new DefaultTable("test1");
-		column1 = new DefaultColumn().setColumnName("name").setType(DataType.STRING);
+		column1 = new DefaultColumn();
+		column1.columnName("name").type(DataType.STRING);
 
-		column2 = new DefaultColumn().setColumnName("id").setType(DataType.NUMERIC);
+		column2 = new DefaultColumn();
+		column2.columnName("id").type(DataType.NUMERIC);
 		table1.registerColumn(column1, column2);
 		search = new Search();
 	}

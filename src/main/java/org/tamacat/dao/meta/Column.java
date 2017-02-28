@@ -17,9 +17,21 @@ public interface Column {
 
 	String getName();
 
+	/**
+	 * @since 1.4
+	 */
+	Column name(String name);
+	
 	String getColumnName();
+	
+	/**
+	 * @since 1.4
+	 */
+	Column columnName(String columnName);
 
 	String getFunctionName();
+
+	Column functionName(String functionName);
 
 	DataType getType();
 
@@ -48,6 +60,11 @@ public interface Column {
 	Column maxLength(int maxLength);
 	
 	String getDefaultValue();
+	
+	/**
+	 * @since 1.4
+	 */
+	Column defaultValue(String defaultValue);
 
 	Column setTable(Table table);
 
@@ -69,20 +86,48 @@ public interface Column {
 	 */
 	String getFormat();
 	
+	/**
+	 * @since 1.4
+	 */
+	String getDescription();
+	
+	/**
+	 * @since 1.4
+	 */
+	Column description(String description);
+	
+	/**
+	 * @since 1.4
+	 */
+	String getOption();
+	
+	/**
+	 * @since 1.4
+	 */
+	Column option(String option);
+	
 	class NullColumn implements Column {
 		Validator validator;
 		DataType type;
 		boolean primaryKey;
 		boolean notNull;
 		int maxLength;
+		String functionName;
 		boolean function;
 		boolean autoTimestamp;
 		boolean autoGenerateId;
 		String format;
+		String description;
+		String option;
 		
 		@Override
 		public String getName() {
 			return "NULL";
+		}
+		
+		@Override
+		public Column name(String name) {
+			return this;
 		}
 
 		@Override
@@ -91,10 +136,21 @@ public interface Column {
 		}
 
 		@Override
+		public Column columnName(String columnName) {
+			return this;
+		}
+		
+		@Override
 		public String getFunctionName() {
-			return null;
+			return functionName;
 		}
 
+		@Override 
+		public Column functionName(String functionName) {
+			this.functionName = functionName;
+			return this;
+		}
+		
 		@Override
 		public DataType getType() {
 			return type;
@@ -134,6 +190,11 @@ public interface Column {
 		@Override
 		public String getDefaultValue() {
 			return null;
+		}
+		
+		@Override
+		public Column defaultValue(String defaultValue) {
+			return this;
 		}
 
 		@Override
@@ -201,6 +262,28 @@ public interface Column {
 		@Override
 		public String getFormat() {
 			return format;
+		}
+
+		@Override
+		public String getDescription() {
+			return description;
+		}
+
+		@Override
+		public Column description(String description) {
+			this.description = description;
+			return this;
+		}
+
+		@Override
+		public String getOption() {
+			return option;
+		}
+
+		@Override
+		public Column option(String option) {
+			this.option = option;
+			return this;
 		}
 	}
 }

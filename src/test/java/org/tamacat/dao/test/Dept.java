@@ -17,8 +17,8 @@ public class Dept extends MapBasedORMappingBean<Dept> {
     public static final DefaultColumn DEPT_NAME = new DefaultColumn();
     
     static {
-    	DEPT_ID.setType(DataType.STRING).setPrimaryKey(true).setColumnName("dept_id");
-        DEPT_NAME.setType(DataType.STRING).setColumnName("dept_name");
+    	DEPT_ID.type(DataType.STRING).primaryKey(true).columnName("dept_id");
+        DEPT_NAME.type(DataType.STRING).columnName("dept_name");
         TABLE.registerColumn(DEPT_ID, DEPT_NAME);
     }
 }

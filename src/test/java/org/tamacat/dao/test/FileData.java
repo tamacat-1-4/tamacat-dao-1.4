@@ -18,14 +18,12 @@ public class FileData extends MapBasedORMappingBean<FileData> {
     public static final DefaultColumn UPDATE_DATE = new DefaultColumn();
     
     static {
-        FILE_ID.setType(DataType.STRING).setColumnName("file_id")
-        	.setPrimaryKey(true).setAutoGenerateId(true);
-        FILE_NAME.setType(DataType.STRING).setColumnName("file_name");
-        SIZE.setType(DataType.NUMERIC).setColumnName("size");
-        CONTENT_TYPE.setType(DataType.STRING).setColumnName("content_type");
-        DATA.setType(DataType.OBJECT).setColumnName("data");
-        UPDATE_DATE.setType(DataType.DATE).setColumnName("update_date")
-        	.setAutoTimestamp(true);
+        FILE_ID.type(DataType.STRING).columnName("file_id").primaryKey(true).autoGenerateId(true);
+        FILE_NAME.type(DataType.STRING).columnName("file_name");
+        SIZE.type(DataType.NUMERIC).columnName("size");
+        CONTENT_TYPE.type(DataType.STRING).columnName("content_type");
+        DATA.type(DataType.OBJECT).columnName("data");
+        UPDATE_DATE.type(DataType.DATE).columnName("update_date").autoTimestamp(true);
         TABLE.registerColumn(FILE_ID, FILE_NAME, SIZE, CONTENT_TYPE, DATA, UPDATE_DATE);
     }
 }

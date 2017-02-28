@@ -17,7 +17,7 @@ public class Data extends MapBasedORMappingBean<Data> {
 	public static final DefaultColumn UPDATE_DATE = new DefaultColumn("update_date");
 
 	static {
-		ID.type(DataType.STRING).setPrimaryKey(true).setAutoGenerateId(true);
+		ID.type(DataType.STRING).primaryKey(true).autoGenerateId(true);
 		NAME.type(DataType.STRING);
 		NUM1.type(DataType.NUMERIC);
 		NUM2.type(DataType.FLOAT);
