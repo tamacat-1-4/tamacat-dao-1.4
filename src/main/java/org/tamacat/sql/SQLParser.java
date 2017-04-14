@@ -42,7 +42,7 @@ public class SQLParser {
 				if (StringUtils.isEmpty(value) && column.isNotNull()) {
 					throw new InvalidParameterException("Column [" + colName + "] is required.");
 				}
-				if (column.getType() == DataType.STRING // for LIKE 'String
+				if ((column.getType() == DataType.STRING || column.getType() == DataType.BOOLEAN) // for LIKE 'String
 						&& condition.getCondition().indexOf(" like ") >= 0) { // Data'
 					search.append(parseLikeStringValue(condition, column, value));
 				} else if (condition.getCondition().equals(" in ")) { // IN
@@ -81,7 +81,7 @@ public class SQLParser {
 
 	public String parseValue(Column column, String value) {
 		String parseValue = (valueConvertFilter == null) ? value : valueConvertFilter.convertValue(value);
-		if (column.getType() == DataType.STRING) {
+		if (column.getType() == DataType.STRING || column.getType() == DataType.BOOLEAN) {
 			if (value == null) {
 				return parseValue;
 			} else {
@@ -116,7 +116,7 @@ public class SQLParser {
 					String val = value.replace("%", e + "%").replace("_", e + "_");
 					val = condition.getReplaceHolder().replace(VALUE1, val);
 					String parseValue = (valueConvertFilter == null) ? val : valueConvertFilter.convertValue(val);
-					if (column.getType() == DataType.STRING) {
+					if (column.getType() == DataType.STRING || column.getType() == DataType.BOOLEAN) {
 						parseValue = "'" + parseValue + "'";
 					}
 					return parseValue + ESCAPE.replace('?', e);

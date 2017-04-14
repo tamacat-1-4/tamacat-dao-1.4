@@ -6,5 +6,5 @@ package org.tamacat.dao.meta;
 
 public enum DataType {
 
-    STRING, NUMERIC, FLOAT, DATE, TIME, OBJECT, FUNCTION;
+    STRING, NUMERIC, FLOAT, DATE, TIME, OBJECT, FUNCTION, BOOLEAN;
 }

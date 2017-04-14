@@ -36,6 +36,7 @@ public class MappingUtils {
 	public static Object mapping(DataType type, ResultSet rs, int index) throws SQLException {
 		switch (type) {
 		case STRING:
+		case BOOLEAN:
 			return rs.getString(index);
 		case DATE:
 			return rs.getDate(index);
