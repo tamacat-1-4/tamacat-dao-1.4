@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.tamacat.dao.Condition;
 import org.tamacat.dao.Search.ValueConvertFilter;
+import org.tamacat.dao.exception.InvalidParameterException;
 import org.tamacat.dao.meta.DefaultTable;
 import org.tamacat.dao.meta.Column;
 import org.tamacat.dao.meta.Columns;
@@ -58,19 +59,49 @@ public class SQLParserTest extends TestCase {
 		assertEquals("test1.name like '%tama%'", parser.value(column1, Condition.LIKE_PART, "tama"));
 		
 		assertEquals("test1.name=''", parser.value(column1, Condition.EQUAL, ""));
-		assertEquals("test1.name=''", parser.value(column1, Condition.EQUAL, (String)null));
+		assertEquals("test1.name=''", parser.value(column1, Condition.EQUAL, (String)null));		
+	}
+	
+	@Test
+	public void testNumericValue() {
+		assertEquals("test1.id=1234567890", parser.value(column2, Condition.EQUAL, "1234567890"));
+		assertEquals("test1.id=-1234567890", parser.value(column2, Condition.EQUAL, "-1234567890"));
+		assertEquals("test1.id=12345.67890", parser.value(column2, Condition.EQUAL, "12345.67890"));
+		assertEquals("test1.id=null", parser.value(column2, Condition.EQUAL, ""));
+		assertEquals("test1.id=null", parser.value(column2, Condition.EQUAL, (String)null));
+		
+		try {
+			parser.value(column2, Condition.EQUAL, "abc");
+			fail();
+		} catch (InvalidParameterException e) {
+			assertNotNull(e.getMessage());
+		}
+		try {
+			parser.value(column2, Condition.EQUAL, "-");
+			fail();
+		} catch (InvalidParameterException e) {
+			assertNotNull(e.getMessage());
+		}
+		try {
+			parser.value(column2, Condition.EQUAL, ";");
+			fail();
+		} catch (InvalidParameterException e) {
+			assertNotNull(e.getMessage());
+		}
 	}
 	
 	@Test
 	public void testValueDate() {
 		assertEquals("test1.date='2015-01-01'", parser.value(column3, Condition.EQUAL, "2015-01-01"));
 		assertEquals("test1.date=null", parser.value(column3, Condition.EQUAL, ""));
+		assertEquals("test1.date=null", parser.value(column3, Condition.EQUAL, (String)null));
 	}
 	
 	@Test
 	public void testValueTime() {
 		assertEquals("test1.time='2015-01-01 00:00:00'", parser.value(column4, Condition.EQUAL, "2015-01-01 00:00:00"));
 		assertEquals("test1.time=null", parser.value(column4, Condition.EQUAL, ""));
+		assertEquals("test1.time=null", parser.value(column4, Condition.EQUAL, (String)null));
 	}
 	
 	@Test
@@ -88,19 +119,42 @@ public class SQLParserTest extends TestCase {
 		assertEquals("test1.name like '%$%$_$%$_%' escape '$'", parser.value(column1, Condition.LIKE_PART, "%_%_"));
 		
 		assertEquals("test1.name like '%%'", parser.value(column1, Condition.LIKE_PART, ""));
+		assertEquals("test1.name like '%%'", parser.value(column1, Condition.LIKE_PART, (String)null));
 	}
 	
 	@Test
 	public void testInStringValue() {
 		assertEquals("test1.name in ('abc','def','xyz')", parser.value(column1, Condition.IN, "abc", "def", "xyz"));
-		
 		assertEquals("test1.name in ('abc''','def','xyz')", parser.value(column1, Condition.IN, "abc'", "def", "xyz"));
+		
+		assertEquals("test1.name in ('')", parser.value(column1, Condition.IN, ""));
+		assertEquals("test1.name in (null)", parser.value(column1, Condition.IN, (String)null));
 	}
 	
 	@Test
 	public void testInIntValue() {
 		assertEquals("test1.id in (123)", parser.value(column2, Condition.IN, "123"));
 		assertEquals("test1.id in (123,456,789)", parser.value(column2, Condition.IN, "123", "456", "789"));
+		
+		assertEquals("test1.id in (null)", parser.value(column2, Condition.IN, ""));
+		assertEquals("test1.id in (null)", parser.value(column2, Condition.IN, (String)null));
+	}
+	
+	@Test
+	public void testIsNumeric() {
+		assertTrue(parser.isNumeric("1234567890"));
+		assertTrue(parser.isNumeric("-1234567890"));
+		assertTrue(parser.isNumeric("1234567890.1234567890"));
+		assertTrue(parser.isNumeric("-1234567890.1234567890"));
+		assertTrue(parser.isNumeric("0"));
+		
+		assertFalse(parser.isNumeric(""));
+		assertFalse(parser.isNumeric(null));
+		assertFalse(parser.isNumeric("abc"));
+		assertFalse(parser.isNumeric("'"));
+		assertFalse(parser.isNumeric(";"));
+		assertFalse(parser.isNumeric("."));
+		assertFalse(parser.isNumeric("-"));
 	}
 	
 	//for debug.

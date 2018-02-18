@@ -4,6 +4,9 @@
  */
 package org.tamacat.sql;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.tamacat.dao.Condition;
 import org.tamacat.dao.Search;
 import org.tamacat.dao.Search.ValueConvertFilter;
@@ -91,10 +94,15 @@ public class SQLParser {
 			if (StringUtils.isEmpty(value)) {
 				return NULL_VALUE.toLowerCase();
 			} else {
-				return parseValue;
+				if (isNumeric(value)) {
+					return parseValue;
+				} else {
+					//return NULL_VALUE.toLowerCase();
+					throw new InvalidParameterException("value is not numeric.");
+				}
 			}
 		} else if (column.getType() == DataType.TIME || column.getType() == DataType.DATE) {
-			if (value == null || StringUtils.isEmpty(value) || value.equalsIgnoreCase(NULL_VALUE)) {
+			if (StringUtils.isEmpty(value) || value.equalsIgnoreCase(NULL_VALUE)) {
 				return NULL_VALUE.toLowerCase();
 			} else if (value.equalsIgnoreCase("current_timestamp")) { //TODO
 				return parseValue;
@@ -107,8 +115,12 @@ public class SQLParser {
 			return parseValue;
 		}
 	}
-
+	
 	protected String parseLikeStringValue(Condition condition, Column column, String value) {
+		if (value == null) {
+			//like null -> like ''
+			value = "";
+		}
 		if (value.indexOf('%') >= 0 || value.indexOf('_') >= 0) {
 			char[] esc = new char[] { '$', '#', '~', '!', '^' };
 			for (char e : esc) {
@@ -124,5 +136,16 @@ public class SQLParser {
 			}
 		}
 		return parseValue(column, condition.getReplaceHolder().replace(VALUE1, value));
+	}
+	
+	/**
+	 * @since 1.4-20180217
+	 * @param value
+	 */
+	protected boolean isNumeric(String value) {
+		if (StringUtils.isEmpty(value)) return false;
+	    Pattern p = Pattern.compile("^\\-?[0-9]*\\.?[0-9]+$");
+	    Matcher m = p.matcher(value);
+	    return m.find();
 	}
 }
