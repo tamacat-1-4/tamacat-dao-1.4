@@ -124,7 +124,12 @@ public class JSONUtils {
 					break;
 				case VALUE_NUMBER:
 					if (col != null) {
-						bean.val(col, parser.getLong());
+						long value = parser.getLong();
+						if (col.getType() == DataType.TIME || col.getType() == DataType.DATE) {
+							bean.val(col, new Date(value));
+						} else {
+							bean.val(col, value);
+						}
 						col = null;
 					}
 					break;
@@ -190,7 +195,11 @@ public class JSONUtils {
 				case VALUE_NUMBER:
 					if (col != null) {
 						long value = parser.getLong();
-						data.val(col, value);
+						if (col.getType() == DataType.TIME || col.getType() == DataType.DATE) {
+							data.val(col, new Date(value));
+						} else {
+							data.val(col, value);
+						}
 						LOG.trace("    \""+col.getColumnName()+"\":\""+value+"\"");
 						col = null;
 					}
