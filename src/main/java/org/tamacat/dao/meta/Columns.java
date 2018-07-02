@@ -15,7 +15,7 @@ public class Columns {
 	 */
 	public static Column create(String name) {
 		DefaultColumn col = new DefaultColumn(name);
-		if (name.indexOf("data")>=0 || name.indexOf("time")>=0) {
+		if (name.indexOf("date")>=0 || name.indexOf("time")>=0) {
 			col.type(DataType.TIME);
 		} else {
 			col.type(DataType.STRING);
