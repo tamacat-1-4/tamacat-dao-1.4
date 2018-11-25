@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
-public class DefaultTable implements Table, Serializable {
+public class DefaultTable implements Table, Serializable, Cloneable {
 
 	private static final long serialVersionUID = -2461380378097186495L;
 
@@ -58,6 +58,14 @@ public class DefaultTable implements Table, Serializable {
 	}
 
 	@Override
+	/**
+	 * @since 1.4-20181122
+	 */
+	public String getAliasName() {
+		return aliasName;
+	}
+	
+	@Override
 	public String getTableOrAliasName() {
 		if (aliasName != null)
 			return aliasName;
@@ -95,10 +103,16 @@ public class DefaultTable implements Table, Serializable {
 	@Override
 	public Table registerColumn(Column... cols) {
 		for (Column column : cols) {
-			if (column.isPrimaryKey())
-				this.primaryKeys.add(column);
-			this.columns.add(column);
-			column.setTable(this);
+			try {
+				column.setTable(this);
+				Column c = (Column) column.clone();
+				if (c.isPrimaryKey()) {
+					this.primaryKeys.add(c);
+				}
+				this.columns.add(c);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return this;
 	}
@@ -125,5 +139,55 @@ public class DefaultTable implements Table, Serializable {
 			}
 		}
 		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Table clone() {
+		try {
+			DefaultTable t = (DefaultTable) super.clone();
+			t.columns = (LinkedHashSet<Column>) columns.clone();
+			t.primaryKeys = (HashSet<Column>) primaryKeys.clone();
+			return t;
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((aliasName == null) ? 0 : aliasName.hashCode());
+		result = prime * result + ((schemaName == null) ? 0 : schemaName.hashCode());
+		result = prime * result + ((tableName == null) ? 0 : tableName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DefaultTable other = (DefaultTable) obj;
+		if (aliasName == null) {
+			if (other.aliasName != null)
+				return false;
+		} else if (!aliasName.equals(other.aliasName))
+			return false;
+		if (schemaName == null) {
+			if (other.schemaName != null)
+				return false;
+		} else if (!schemaName.equals(other.schemaName))
+			return false;
+		if (tableName == null) {
+			if (other.tableName != null)
+				return false;
+		} else if (!tableName.equals(other.tableName))
+			return false;
+		return true;
 	}
 }

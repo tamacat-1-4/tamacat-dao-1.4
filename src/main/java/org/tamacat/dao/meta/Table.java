@@ -6,12 +6,17 @@ package org.tamacat.dao.meta;
 
 import java.util.Collection;
 
-public interface Table {
+public interface Table extends Cloneable {
 
 	String getSchemaName();
 
 	String getTableName();
 
+	/**
+	 * @since 1.4-20181122
+	 */
+	String getAliasName();
+	 
 	String getTableOrAliasName();
 
 	String getTableNameWithSchema();
@@ -27,4 +32,6 @@ public interface Table {
 	boolean equalsTable(Object target);
 	
 	Column find(String columnName);
+	
+	Table clone();
 }

@@ -58,11 +58,13 @@ public class JSONUtils {
 				} else if (col.getType()==DataType.FLOAT) {
 					builder.add(col.getColumnName(), StringUtils.parse(value, 0d));
 				} else if (col.getType()==DataType.TIME) {
-					String format = col.getFormat();
+					String format = col.getFormat();					
 					if (StringUtils.isNotEmpty(format)) {
 						Date d = DateUtils.parse(value, format);
 						if (d != null) {
-							builder.add(col.getColumnName(), DateUtils.getTime(d, format));
+							builder.add(col.getColumnName(), d.getTime()); //DateUtils.getTime(d, format));
+						} else {
+							builder.add(col.getColumnName(), value);
 						}
 					} else {
 						if (value.indexOf('.')>0) {

@@ -23,6 +23,7 @@ import org.tamacat.dao.meta.Table;
 import org.tamacat.dao.orm.ORMappingSupport;
 import org.tamacat.dao.util.MappingUtils;
 import org.tamacat.sql.SQLParser;
+import org.tamacat.util.StringUtils;
 import org.tamacat.util.UniqueCodeGenerator;
 
 public class QueryImpl<T extends ORMappingSupport<T>> implements Query<T> {
@@ -173,7 +174,7 @@ public class QueryImpl<T extends ORMappingSupport<T>> implements Query<T> {
 				String table = outerJoinTables.get(tab);
 				from.append(table);
 			} else {
-				from.append(tab.getTableNameWithSchema());
+				from.append(getFromTableName(tab));
 			}
 			uniqTableNames.add(tab.getTableNameWithSchema());
 		}
@@ -326,8 +327,8 @@ public class QueryImpl<T extends ORMappingSupport<T>> implements Query<T> {
 			outerJoinTables.put(col2.getTable(), outerJoinTables.get(col2.getTable()) + " and " + getColumnName(col1)
 					+ "=" + getColumnName(col2));
 		} else {
-			outerJoinTables.put(col2.getTable(), col1.getTable().getTableNameWithSchema() + " left join "
-					+ col2.getTable().getTableNameWithSchema() + " on " + getColumnName(col1) + "="
+			outerJoinTables.put(col2.getTable(), getFromTableName(col1.getTable()) + " left join "
+					+ getFromTableName(col2.getTable()) + " on " + getColumnName(col1) + "="
 					+ getColumnName(col2));
 			removeFromTables.add(col1.getTable());
 			tables.add(col2.getTable());
@@ -336,6 +337,14 @@ public class QueryImpl<T extends ORMappingSupport<T>> implements Query<T> {
 		uniqTableNames.add(col2.getTable().getTableNameWithSchema());
 		uniqTableNames.add(col1.getTable().getTableNameWithSchema());
 		return this;
+	}
+	
+	String getFromTableName(Table table) {
+		if (StringUtils.isNotEmpty(table.getAliasName())) {
+			return table.getTableName() + " as " + table.getAliasName();
+		} else {
+			return table.getTableNameWithSchema();
+		}
 	}
 
 	@Override

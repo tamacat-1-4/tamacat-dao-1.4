@@ -6,7 +6,7 @@ package org.tamacat.dao.meta;
 
 import org.tamacat.dao.validation.Validator;
 
-public interface Column {
+public interface Column extends Cloneable {
 
 	ColumnDefine PRIMARY_KEY = ColumnDefine.PRIMARY_KEY;
 	ColumnDefine FOREIGN_KEY = ColumnDefine.FOREIGN_KEY;
@@ -105,6 +105,8 @@ public interface Column {
 	 * @since 1.4
 	 */
 	Column option(String option);
+	
+	Column clone();
 	
 	class NullColumn implements Column {
 		Validator validator;
@@ -284,6 +286,17 @@ public interface Column {
 		public Column option(String option) {
 			this.option = option;
 			return this;
+		}
+		
+		@Override
+		public Column clone() {
+			try {
+				Column c = (Column) super.clone();
+				c.type(type);
+				return c;
+			} catch (CloneNotSupportedException e) {
+				return null;
+			}
 		}
 	}
 }

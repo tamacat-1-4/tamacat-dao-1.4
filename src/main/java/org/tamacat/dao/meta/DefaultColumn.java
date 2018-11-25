@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 import org.tamacat.dao.validation.Validator;
 
-public class DefaultColumn implements Column, Serializable {
+public class DefaultColumn implements Column, Serializable, Cloneable {
 
 	private static final long serialVersionUID = 4721350387373477367L;
 	
@@ -213,7 +213,7 @@ public class DefaultColumn implements Column, Serializable {
 	}
 
 	public Column setTable(Table table) {
-		this.table = table;
+		this.table = table; //.clone();
 		return this;
 	}
 
@@ -275,4 +275,54 @@ public class DefaultColumn implements Column, Serializable {
 		this.description = description;
 		return this;
 	}
+	
+	@Override
+	public Column clone() {
+		try {
+			DefaultColumn c = (DefaultColumn) super.clone();
+			c.type = type;
+			c.validator = validator;
+			if (table != null) {
+				c.table = table;//.clone();
+			}
+			return c;
+		} catch (CloneNotSupportedException e) {
+			return null;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((columnName == null) ? 0 : columnName.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DefaultColumn other = (DefaultColumn) obj;
+		if (columnName == null) {
+			if (other.columnName != null)
+				return false;
+		} else if (!columnName.equals(other.columnName))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (type != other.type)
+			return false;
+		return true;
+	}
+	
 }

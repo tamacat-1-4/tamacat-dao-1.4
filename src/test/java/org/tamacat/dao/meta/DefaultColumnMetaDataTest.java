@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.tamacat.dao.meta.DataType;
+import org.tamacat.util.CloneUtils;
 
 public class DefaultColumnMetaDataTest {
 
@@ -86,5 +87,11 @@ public class DefaultColumnMetaDataTest {
         assertEquals(DataType.TIME, meta.getType());
         meta.setType(DataType.NUMERIC);
         assertEquals(DataType.NUMERIC, meta.getType());
+    }
+    
+    @Test
+    public void testClone() throws Exception {
+    	System.out.println(CloneUtils.clone(meta));
+    	System.out.println(meta.clone());
     }
 }
