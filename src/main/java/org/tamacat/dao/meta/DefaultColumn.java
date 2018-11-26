@@ -296,7 +296,9 @@ public class DefaultColumn implements Column, Serializable, Cloneable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((columnName == null) ? 0 : columnName.hashCode());
+		result = prime * result + ((functionName == null) ? 0 : functionName.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((table == null) ? 0 : table.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
@@ -315,14 +317,23 @@ public class DefaultColumn implements Column, Serializable, Cloneable {
 				return false;
 		} else if (!columnName.equals(other.columnName))
 			return false;
+		if (functionName == null) {
+			if (other.functionName != null)
+				return false;
+		} else if (!functionName.equals(other.functionName))
+			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (table == null) {
+			if (other.table != null)
+				return false;
+		} else if (!table.equals(other.table))
+			return false;
 		if (type != other.type)
 			return false;
 		return true;
 	}
-	
 }
