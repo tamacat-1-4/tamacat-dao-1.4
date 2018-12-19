@@ -17,7 +17,7 @@ public class DefaultColumn implements Column, Serializable, Cloneable {
 	protected String name;
 	protected String functionName;
 	
-	protected DataType type;
+	protected DataType type = DataType.STRING;
 	
 	protected boolean isAutoGenerateId;
 	protected boolean isAutoTimestamp;

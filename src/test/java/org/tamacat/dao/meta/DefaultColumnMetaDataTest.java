@@ -78,7 +78,7 @@ public class DefaultColumnMetaDataTest {
 
     @Test
     public void testGetType() {
-        assertEquals(null, meta.getType());
+        assertEquals(DataType.STRING, meta.getType());
         meta.setType(DataType.STRING);
         assertEquals(DataType.STRING, meta.getType());
         meta.setType(DataType.DATE);
